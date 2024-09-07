@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Choice Test for Yonelisa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .timer {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hi Yonelisa, Welcome to the Test</h1>
+    <h2>Each question must be answered in <span id="timer" class="timer">40</span> seconds</h2>
+
+    <form id="quizForm">
+      <div id="question-container"></div>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "The DNA of different species only differs in the:",
+        choices: ["A. Components of the nucleotides", "B. Sequence of the nucleotides", "C. Type of bond between the nitrogenous bases", "D. Type of sugar that it contains"],
+        answer: 1
+      },
+      {
+        question: "How many adenine molecules are present in a double-stranded DNA molecule if one strand has 60 adenine and 20 thymine molecules?",
+        choices: ["A. 60", "B. 150", "C. 80", "D. 300"],
+        answer: 2
+      },
+      {
+        question: "Which is correct with regard to the structure of DNA and RNA?",
+        choices: ["A. RNA is double-stranded, and DNA is single-stranded", "B. RNA contains uracil, and DNA contains thymine", "C. RNA is a long molecule, and DNA is short", "D. RNA forms a double helix, and DNA does not"],
+        answer: 1
+      },
+      {
+        question: "The shape of the DNA molecule was discovered by:",
+        choices: ["A. Franklin, using evidence from Watson and Crick", "B. Franklin, working independently", "C. Watson and Crick, working independently", "D. Watson and Crick, using some evidence obtained from Franklin"],
+        answer: 3
+      },
+      {
+        question: "The structure of DNA was determined by using X-ray pictures produced by:",
+        choices: ["A. Watson and Crick", "B. Franklin and Wilkins", "C. Watson and Franklin", "D. Crick and Franklin"],
+        answer: 1
+      },
+      {
+        question: "What process is described by the unwinding and unzipping of DNA, with one strand acting as a template to form mRNA?",
+        choices: ["A. Translation", "B. Transcription", "C. DNA replication", "D. Mutation"],
+        answer: 1
+      },
+      {
+        question: "In which organelle does the stage of protein synthesis occur?",
+        choices: ["A. Nucleus", "B. Ribosome", "C. Mitochondria", "D. Golgi Apparatus"],
+        answer: 1
+      },
+      {
+        question: "What bond is found between amino acids during protein synthesis?",
+        choices: ["A. Hydrogen", "B. Peptide", "C. Ionic", "D. Covalent"],
+        answer: 1
+      },
+      {
+        question: "Identify the sequence that codes for Glycine from the mRNA codon table:",
+        choices: ["A. GGA", "B. CCT", "C. TAC", "D. UUC"],
+        answer: 1
+      },
+      {
+        question: "What process occurs when tRNA carries an amino acid and matches its anticodon with the codon on the mRNA?",
+        choices: ["A. Translation", "B. Replication", "C. Splicing", "D. Transcription"],
+        answer: 1
+      },
+      // Add the remaining questions in this format
+    ];
+
+    const form = document.getElementById('quizForm');
+    const resultDiv = document.getElementById('result');
+    const questionContainer = document.getElementById('question-container');
+    const timerElement = document.getElementById('timer');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timer;
+
+    function loadQuestion() {
+      if (currentQuestionIndex < questions.length) {
+        const question = questions[currentQuestionIndex];
+        questionContainer.innerHTML = `
+          <h2>${currentQuestionIndex + 1}. ${question.question}</h2>
+          ${question.choices.map((choice, index) => `
+            <label>
+              <input type="radio" name="answer" value="${index}" required>
+              ${choice}
+            </label>
+          `).join('')}
+        `;
+        startTimer();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function startTimer() {
+      let timeLeft = 40;
+      timerElement.textContent = timeLeft;
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        if (timeLeft === 0) {
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function nextQuestion() {
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+      if (selectedAnswer && parseInt(selectedAnswer.value) === questions[currentQuestionIndex].answer) {
+        score++;
+      }
+      currentQuestionIndex++;
+      loadQuestion();
+    }
+
+    function finishQuiz() {
+      clearInterval(timer);
+      const passMark = (questions.length * 0.8);
+      const passed = score >= passMark ? 'Passed' : 'Failed';
+
+      resultDiv.innerHTML = `<h2>Yonelisa, you scored ${score}/${questions.length} and you have ${passed}!</h2>`;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      nextQuestion();
+    });
+
+    loadQuestion();
+  </script>
+</body>
+</html>
